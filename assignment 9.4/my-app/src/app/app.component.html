@@ -1,0 +1,68 @@
+<!-- Form with three inputs and one dropdown which intializes with data from service on intialization and validates with min and maxlength-->
+<section class="container">
+  <!-- ngSubmit calls the function onSubmit on submitting the form  -->
+  <form class="form-horizontal" (ngSubmit)='onSubmit(f)' #f="ngForm">
+    <div class="form-group">
+      <label for="inputUsername" class="col-sm-2 control-label">Username</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputUsername" placeholder="Username" ngModel name="name" pattern="^[a-z0-9_-]{3,15}$"
+          required #username="ngModel" [ngClass]="{inValid: !username.valid && username.touched, valid: username.valid && username.touched}">
+        <span class="help-block" *ngIf="!username.valid && username.touched">Please enter a valid username</span>
+      </div>
+    </div>
+    <!-- username input ends here -->
+    <div class="form-group">
+      <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-10">
+        <!-- CSS class applied based on validation -->
+        <input type="email" class="form-control" id="inputEmail" placeholder="Email" ngModel name="email" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+          required #email="ngModel" [ngClass]="{inValid: !email.valid && email.touched, valid: email.valid && email.touched}">
+        <span class="help-block" *ngIf="!email.valid && email.touched">Please Enter a valid email</span>
+      </div>
+    </div>
+    <!-- email input ends here -->
+    <div class="form-group">
+      <label for="inputAddress" class="col-sm-2 control-label">Address</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputAddress" placeholder="Your Address" ngModel name="address" #address="ngModel"
+          [ngClass]="{inValid: !address.valid && address.touched, valid: address.valid && address.touched}" maxlength="20"
+          minlength="10" required>
+        <!--Display error message on MinLength and MaxLength Validation-->
+        <span class="help-block" *ngIf="address?.errors?.required && address.touched">Please Enter Your Address</span>
+        <span class="help-block" *ngIf="(address?.errors?.minlength?.requiredLength !== address?.errors?.minlength?.actualLength) && address?.touched">Address should be at least 10 characters long</span>
+      </div>
+    </div>
+    <!-- address input ends here -->
+    <div class="form-group">
+      <label for="sel1" class="col-sm-2 control-label">Choose Course</label>
+      <div class="col-sm-10">
+        <select class="form-control" id="sel1" [(ngModel)]="selectedOption" name="select" required #select="ngModel" [ngClass]="{inValid: !select.valid && select.touched, valid: select.valid && select.touched}">
+          <option [value]="selectedOption" [disabled]="true">Choose Your Course</option>
+          <option *ngFor="let data of dropDownArr; index as i"  [ngValue]="data.course">{{data.course}}</option>          
+        </select>
+        <span class="help-block" *ngIf="!select.valid && select.touched">Please choose a Course</span>
+      </div>
+    </div>
+    <!-- select input ends here -->
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default" [disabled]=!f.valid>Submit</button>
+        <button type="button" class="btn btn-default" (click)="resetForm(f)">Reset</button>
+      </div>
+    </div>
+    <!-- submit and reset buttons ends here -->
+  </form>
+</section>
+<!-- section displays the submited form data in the view -->
+<section class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">Registered users</div>
+
+    <!-- List group -->
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let person of personsList">username:&nbsp;&nbsp;{{person.name}} &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; email:&nbsp;&nbsp;{{person.email}}
+        &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; Address: &nbsp;&nbsp;{{person.address}} &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+        Course Chosen: &nbsp;&nbsp;{{person.chosenCourse}}</li>
+    </ul>
+  </div>
+</section>
